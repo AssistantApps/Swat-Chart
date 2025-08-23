@@ -1,0 +1,44 @@
+.wrangler
+.output
+.vercel
+.netlify
+.vinxi
+app.config.timestamp_*.js
+
+# Environment
+.env
+.env*.local
+
+# dependencies
+/node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+*.launch
+.settings/
+
+# Temp
+gitignore
+
+# System Files
+.DS_Store
+Thumbs.db
+
+/build
+/data
+/dist
+/temp
+.env
+/coverage
+/src/*.export.*
+tsup.config*.mjs
+vite.config.ts.*.mjs
+/debug-storybook.log
+./src
+./script
+./.vscode
+./.storybook
+./stories
+./example

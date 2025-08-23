@@ -1,0 +1,59 @@
+name: Build and Deploy
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: ['main']
+  workflow_dispatch:
+
+jobs:
+  build:
+    environment: github-pages
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [22.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run report
+      - run: npm run build
+
+      - name: Build example page
+        run: |
+          cd example
+          npm run build
+          cd public
+          touch .nojekyll
+          echo "/github-pages-deploy-action-temp-deployment-folder" > ./.gitignore
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: example/dist # The folder the action should deploy.
+
+      - name: Publish
+        env:
+          NPM_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+        run: |
+          touch .npmrc
+          echo //registry.npmjs.org/:_authToken=$NPM_TOKEN >> .npmrc
+          npm publish

@@ -1,0 +1,8 @@
+#!/bin/sh
+
+echo "$1"
+read -r firstLine<"$1"
+
+pwd
+
+/bin/sh .githooks/hasEmoji.sh $firstLine

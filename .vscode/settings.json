@@ -1,0 +1,44 @@
+{
+  "typescript.preferences.quoteStyle": "single",
+  "prettier.trailingComma": "all",
+  "prettier.tabWidth": 2,
+  "prettier.semi": true,
+  "prettier.singleQuote": true,
+  "prettier.printWidth": 120,
+  "github.copilot.editor.enableAutoCompletions": false,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  },
+  "cSpell.language": "en-GB,en-US",
+  "cSpell.words": [
+    "appguid",
+    "assistantapps",
+    "autodocs",
+    "Lourens",
+    "nojekyll",
+    "noselect",
+    "npmjs",
+    "tsup",
+    "vite",
+    "VITEPRESS",
+    "VITEST"
+  ]
+}
