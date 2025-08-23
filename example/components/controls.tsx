@@ -1,6 +1,6 @@
 import { Component, createSignal, For, Show } from 'solid-js';
-
 import {
+  packagesUsed,
   SwatChartConfig,
   SwatChartPoint,
   SwatChartXGridLine,
@@ -8,7 +8,18 @@ import {
   SwatChartYGridLine,
   SwatChartYTick,
 } from '../../dist/index';
-import { defaultChartConfig } from '../constants/defaultChart';
+
+import { Modal } from '../components/core/modal';
+import { TicksSection } from './section/ticks';
+import { GridLinesSection } from './section/gridLines';
+import { PointsSection } from './section/points';
+import {
+  getValueOfSubProperty,
+  getValueOfSubSubProperty,
+  subNumber,
+  subString,
+  subSubNumber,
+} from '../helpers/controlsHelper';
 import { onTargetValue } from '../helpers/eventHelper';
 
 interface IProps extends SwatChartConfig {
@@ -39,65 +50,8 @@ export const Controls: Component<IProps> = (props) => {
   const [bottomRightBackground, setBottomRightBackground] = createSignal<string>(
     getValueOfSubProperty(props, 'colour', 'bottomRightBackground'),
   );
-  const [tickHeight, setTickHeight] = createSignal<number>(getValueOfSubProperty(props, 'ticks', 'height'));
-  const [tickWidth, setTickWidth] = createSignal<number>(getValueOfSubProperty(props, 'ticks', 'width'));
-  const [tickTextPadding, setTickTextPadding] = createSignal<number>(
-    getValueOfSubProperty(props, 'ticks', 'textPadding'),
-  );
-  const [xTicks, setXTicks] = createSignal<Array<SwatChartXTick>>(getValueOfSubProperty(props, 'ticks', 'x'));
-  const [yTicks, setYTicks] = createSignal<Array<SwatChartYTick>>(getValueOfSubProperty(props, 'ticks', 'y'));
 
-  const [gridLinesSpacing, setGridLinesSpacing] = createSignal<number>(
-    getValueOfSubProperty(props, 'gridLines', 'spacing'),
-  );
-  const [xGridLines, setXGridLines] = createSignal<Array<SwatChartXGridLine>>(
-    getValueOfSubProperty(props, 'gridLines', 'x'),
-  );
-  const [yGridLines, setYGridLines] = createSignal<Array<SwatChartYGridLine>>(
-    getValueOfSubProperty(props, 'gridLines', 'y'),
-  );
-
-  const [pointsRadius, setPointsRadius] = createSignal<number>(getValueOfSubProperty(props, 'point', 'radius'));
-  const [points, setPoints] = createSignal<Array<SwatChartPoint>>(getValueOfSubProperty(props, 'point', 'points'));
-
-  const subValue =
-    <TIn, TOut>(manipulateValue: (orig: TIn) => TOut) =>
-    (propName: string, subPropName: string, displayFunc: (newValue: TOut) => void) =>
-    (event: any) => {
-      const func = onTargetValue((newValue: TIn) =>
-        props.onChange((prev: any) => {
-          displayFunc(manipulateValue(newValue));
-          const propValue = prev[propName];
-          return { ...prev, [propName]: { ...propValue, [subPropName]: manipulateValue(newValue) } };
-        }),
-      );
-      func(event);
-    };
-  const subSubValue =
-    <TIn, TOut>(manipulateValue: (orig: TIn) => TOut) =>
-    (propName: string, subPropName: string, subSubPropName: string, displayFunc: (newValue: TOut) => void) =>
-    (event: any) => {
-      const func = onTargetValue((newValue: TIn) =>
-        props.onChange((prev: any) => {
-          displayFunc(manipulateValue(newValue));
-          const propValue = prev[propName];
-          const propSubValue = propValue[subPropName];
-          return {
-            ...prev,
-            [propName]: {
-              ...propValue,
-              [subPropName]: { ...propSubValue, [subSubPropName]: manipulateValue(newValue) },
-            },
-          };
-        }),
-      );
-      func(event);
-    };
-
-  const subNumber = subValue<string, number>((val) => +val);
-  const subSubNumber = subSubValue<string, number>((val) => +val);
-  const subString = subValue<string, string>((val) => val);
-
+  const [isPackagesModalOpen, setIsPackagesModalOpen] = createSignal(false);
   const [isClicked, setIsClicked] = createSignal<boolean>(false);
 
   const clickCopyConfig = () => {
@@ -128,7 +82,7 @@ export const Controls: Component<IProps> = (props) => {
               min={0}
               max={1000}
               value={borderRadius()}
-              onChange={subNumber('chart', 'borderRadius', (newValue) => setBorderRadius(newValue))}
+              onChange={subNumber(props.onChange, 'chart', 'borderRadius', (newValue) => setBorderRadius(newValue))}
             />
           </label>
           <label>
@@ -138,7 +92,7 @@ export const Controls: Component<IProps> = (props) => {
               min={0}
               max={10}
               value={lineWidth()}
-              onChange={subNumber('chart', 'lineWidth', (newValue) => setLineWidth(newValue))}
+              onChange={subNumber(props.onChange, 'chart', 'lineWidth', (newValue) => setLineWidth(newValue))}
             />
           </label>
           <label>
@@ -149,14 +103,14 @@ export const Controls: Component<IProps> = (props) => {
                 min={0}
                 max={1000}
                 value={paddingX()}
-                onChange={subSubNumber('chart', 'padding', 'x', (newValue) => setPaddingX(newValue))}
+                onChange={subSubNumber(props.onChange, 'chart', 'padding', 'x', (newValue) => setPaddingX(newValue))}
               />
               <input
                 type="number"
                 min={0}
                 max={1000}
                 value={paddingY()}
-                onChange={subSubNumber('chart', 'padding', 'y', (newValue) => setPaddingY(newValue))}
+                onChange={subSubNumber(props.onChange, 'chart', 'padding', 'y', (newValue) => setPaddingY(newValue))}
               />
             </div>
           </label>
@@ -167,7 +121,7 @@ export const Controls: Component<IProps> = (props) => {
               min={0}
               max={10}
               value={arrowWidth()}
-              onChange={subNumber('chart', 'arrowWidth', (newValue) => setArrowWidth(newValue))}
+              onChange={subNumber(props.onChange, 'chart', 'arrowWidth', (newValue) => setArrowWidth(newValue))}
             />
           </label>
         </div>
@@ -182,7 +136,7 @@ export const Controls: Component<IProps> = (props) => {
             <input
               type="color"
               value={chartStroke()}
-              onChange={subString('colour', 'stroke', (newValue) => setChartStroke(newValue))}
+              onChange={subString(props.onChange, 'colour', 'stroke', (newValue) => setChartStroke(newValue))}
             />
           </label>
           <label>
@@ -190,7 +144,9 @@ export const Controls: Component<IProps> = (props) => {
             <input
               type="color"
               value={backgroundFill()}
-              onChange={subString('colour', 'backgroundFill', (newValue) => setBackgroundFill(newValue))}
+              onChange={subString(props.onChange, 'colour', 'backgroundFill', (newValue) =>
+                setBackgroundFill(newValue),
+              )}
             />
           </label>
           <label>
@@ -198,7 +154,9 @@ export const Controls: Component<IProps> = (props) => {
             <input
               type="color"
               value={topLeftBackground()}
-              onChange={subString('colour', 'topLeftBackground', (newValue) => setTopLeftBackground(newValue))}
+              onChange={subString(props.onChange, 'colour', 'topLeftBackground', (newValue) =>
+                setTopLeftBackground(newValue),
+              )}
             />
           </label>
           <label>
@@ -206,7 +164,9 @@ export const Controls: Component<IProps> = (props) => {
             <input
               type="color"
               value={topRightBackground()}
-              onChange={subString('colour', 'topRightBackground', (newValue) => setTopRightBackground(newValue))}
+              onChange={subString(props.onChange, 'colour', 'topRightBackground', (newValue) =>
+                setTopRightBackground(newValue),
+              )}
             />
           </label>
           <label>
@@ -214,7 +174,9 @@ export const Controls: Component<IProps> = (props) => {
             <input
               type="color"
               value={bottomLeftBackground()}
-              onChange={subString('colour', 'bottomLeftBackground', (newValue) => setBottomLeftBackground(newValue))}
+              onChange={subString(props.onChange, 'colour', 'bottomLeftBackground', (newValue) =>
+                setBottomLeftBackground(newValue),
+              )}
             />
           </label>
           <label>
@@ -222,166 +184,75 @@ export const Controls: Component<IProps> = (props) => {
             <input
               type="color"
               value={bottomRightBackground()}
-              onChange={subString('colour', 'bottomRightBackground', (newValue) => setBottomRightBackground(newValue))}
+              onChange={subString(props.onChange, 'colour', 'bottomRightBackground', (newValue) =>
+                setBottomRightBackground(newValue),
+              )}
             />
           </label>
         </div>
       </details>
       <hr />
 
-      <details name="ticks">
-        <summary>Ticks</summary>
-        <div class="content">
-          <label>
-            Height ({tickHeight()})
-            <input
-              type="range"
-              min={0}
-              max={30}
-              value={tickHeight()}
-              onChange={subNumber('ticks', 'height', (newValue) => setTickHeight(newValue))}
-            />
-          </label>
-          <label>
-            Width ({tickWidth()})
-            <input
-              type="range"
-              min={0}
-              max={20}
-              value={tickWidth()}
-              onChange={subNumber('ticks', 'width', (newValue) => setTickWidth(newValue))}
-            />
-          </label>
-          <label>
-            Text Padding ({tickTextPadding()})
-            <input
-              type="range"
-              min={0}
-              max={20}
-              value={tickTextPadding()}
-              onChange={subNumber('ticks', 'textPadding', (newValue) => setTickTextPadding(newValue))}
-            />
-          </label>
-          <span>~WIP~ X axis ticks:</span>
-          <ul>
-            <For each={xTicks()}>
-              {(item) => (
-                <li class="tick">
-                  <span>📝&nbsp;</span>
-                  <Show when={item.label.length > 0}>
-                    <span>{item.label}&nbsp;</span>
-                  </Show>
-                  <span>({item.percent})</span>
-                </li>
-              )}
-            </For>
-          </ul>
-          <span>Y axis ticks:</span>
-          <ul>
-            <For each={yTicks()}>
-              {(item) => (
-                <li class="tick">
-                  <span>📝&nbsp;</span>
-                  <Show when={item.label.length > 0}>
-                    <span>{item.label}&nbsp;</span>
-                  </Show>
-                  <span>({item.percent})</span>
-                </li>
-              )}
-            </For>
-          </ul>
-        </div>
-      </details>
+      <TicksSection {...props} />
       <hr />
 
-      <details name="grid lines">
-        <summary>Grid Lines</summary>
-        <div class="content">
-          <label>
-            gridLinesSpacing ({gridLinesSpacing()})
-            <input
-              type="range"
-              min={0}
-              max={50}
-              value={gridLinesSpacing()}
-              onChange={subNumber('gridLines', 'spacing', (newValue) => setGridLinesSpacing(newValue))}
-            />
-          </label>
-          <span>~WIP~ X axis Grid Lines:</span>
-          <ul>
-            <For each={xGridLines()}>
-              {(item) => (
-                <li class="grid-lines">
-                  <span>📝&nbsp;</span>
-                  <span>{item.percent}</span>
-                </li>
-              )}
-            </For>
-          </ul>
-          <span>~WIP~ Y axis Grid Lines:</span>
-          <ul>
-            <For each={yGridLines()}>
-              {(item) => (
-                <li class="grid-lines">
-                  <span>📝&nbsp;</span>
-                  <span>{item.percent}</span>
-                </li>
-              )}
-            </For>
-          </ul>
-        </div>
-      </details>
+      <GridLinesSection {...props} />
       <hr />
 
-      <details name="points">
-        <summary>Points</summary>
-        <div class="content">
-          <label>
-            Default Radius ({pointsRadius()})
-            <input
-              type="range"
-              min={0}
-              max={50}
-              value={pointsRadius()}
-              onChange={subNumber('point', 'radius', (newValue) => setPointsRadius(newValue))}
-            />
-          </label>
-          <span>~WIP~ Points:</span>
-          <ul>
-            <For each={points()}>
-              {(item) => (
-                <li class="point">
-                  <span>📝&nbsp;</span>
-                  <Show when={item.label.length > 0}>
-                    <span>{item.label}&nbsp;</span>
-                  </Show>
-                  <br />
-                  <span>
-                    ({item.percent.x}, {item.percent.y})
-                  </span>
-                </li>
-              )}
-            </For>
-          </ul>
-        </div>
-      </details>
+      <PointsSection {...props} />
       <hr />
 
-      <button class="secondary outline" style="width: 100%" onClick={clickCopyConfig}>
+      <button class="outline" style="width: 100%" onClick={clickCopyConfig}>
         <Show when={isClicked()} fallback={<span>Copy current config</span>}>
           <span>Config copied!</span>
         </Show>
       </button>
-      <button class="outline" style="width: 100%; margin-top: 0.75em" onClick={props.copyConfig}>
+      <a
+        class="secondary outline"
+        role="button"
+        style="width: 100%; margin-top: 0.75em"
+        href="https://github.com/AssistantApps/Swat-Chart/blob/main/README.md#install"
+        target="_blank"
+      >
         How to use this chart
+      </a>
+      <button
+        class="secondary outline"
+        style="width: 100%; margin-top: 0.75em"
+        onClick={() => setIsPackagesModalOpen(true)}
+      >
+        Packages Used
       </button>
+      <Modal
+        isOpen={isPackagesModalOpen()}
+        heading={() => 'Packages Used'}
+        onBackdropClick={() => setIsPackagesModalOpen(false)}
+        size="lg"
+      >
+        <p>Generated on: {packagesUsed().generatedDate}</p>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Version</th>
+              <th scope="col">Licence type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <For each={packagesUsed().list}>
+              {(item) => (
+                <tr>
+                  <th scope="row">{item.name}</th>
+                  <td>{item.version}</td>
+                  <td>
+                    <a href={item.licenceUrl ?? '#'}>{item.licenseType}</a>
+                  </td>
+                </tr>
+              )}
+            </For>
+          </tbody>
+        </table>
+      </Modal>
     </div>
   );
 };
-
-const getValueOfSubProperty = (chart: any, propName: string, subPropName: string) =>
-  chart?.[propName]?.[subPropName] ?? (defaultChartConfig as any)[propName]?.[subPropName];
-
-const getValueOfSubSubProperty = (chart: any, propName: string, subPropName: string, subSubPropName: string) =>
-  chart?.[propName]?.[subPropName]?.[subSubPropName] ??
-  (defaultChartConfig as any)[propName]?.[subPropName]?.[subSubPropName];

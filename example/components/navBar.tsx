@@ -31,7 +31,7 @@ export const NavBar: Component = () => {
         <ul class="logo">
           <li>
             <a href="/" title="AssistantApps - Swat Chart">
-              <img alt="logo image" src="/logo.png" />
+              <img alt="logo image" src="./logo.png" />
             </a>
           </li>
           <li>Swat Chart - AssistantApps</li>
@@ -130,7 +130,13 @@ export const NavBar: Component = () => {
             </a>
           </li>
           <li>
-            <a class="contrast" aria-label="Turn off dark mode" data-discover="true" href="/docs" onClick={toggleTheme}>
+            <a
+              class="contrast"
+              aria-label="Turn off dark mode"
+              data-discover="true"
+              href="/this-is-an-easter-egg"
+              onClick={toggleTheme}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"

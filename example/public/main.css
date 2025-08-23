@@ -116,3 +116,7 @@ svg.icon-theme-toggle.moon :first-child path {
         transform: translate3d(-9px, 14px, 0)
     }
 }
+
+.pointer {
+    cursor: pointer;
+}

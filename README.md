@@ -22,8 +22,8 @@
 
 ## Links
 
-[npm package](https://www.npmjs.com/package/@assistantapps/swat-chart)
-[demo](https://assistantapps.github.io/Swat-Chart)
+- [npm package](https://www.npmjs.com/package/@assistantapps/swat-chart)
+- [demo](https://assistantapps.github.io/Swat-Chart)
 
 ## Install
 

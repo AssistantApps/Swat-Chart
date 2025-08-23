@@ -23,3 +23,8 @@ export const preventDefault = (event: any) => {
   event?.preventDefault?.();
   return event;
 };
+
+export const stopPropagation = (event: ClickEvent): ClickEvent => {
+  event?.stopPropagation?.();
+  return event;
+};
