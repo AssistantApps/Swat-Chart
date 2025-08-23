@@ -20,7 +20,10 @@
   <br />
 </div>
 
-> A simple chart to be used in your projects
+## Links
+
+[npm package](https://www.npmjs.com/package/@assistantapps/swat-chart)
+[demo](https://assistantapps.github.io/Swat-Chart)
 
 ## Install
 
