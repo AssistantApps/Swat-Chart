@@ -1,18 +1,7 @@
 import { Component, createSignal, For, Show } from 'solid-js';
-import {
-  packagesUsed,
-  SwatChartConfig,
-  SwatChartPoint,
-  SwatChartXGridLine,
-  SwatChartXTick,
-  SwatChartYGridLine,
-  SwatChartYTick,
-} from '../../dist/index';
+import { packagesUsed, SwatChartConfig } from '../../dist/index';
 
 import { Modal } from '../components/core/modal';
-import { TicksSection } from './section/ticks';
-import { GridLinesSection } from './section/gridLines';
-import { PointsSection } from './section/points';
 import {
   getValueOfSubProperty,
   getValueOfSubSubProperty,
@@ -20,7 +9,9 @@ import {
   subString,
   subSubNumber,
 } from '../helpers/controlsHelper';
-import { onTargetValue } from '../helpers/eventHelper';
+import { GridLinesSection } from './section/gridLines';
+import { PointsSection } from './section/points';
+import { TicksSection } from './section/ticks';
 
 interface IProps extends SwatChartConfig {
   onChange: (func: (oldSwatChartConfig: SwatChartConfig) => SwatChartConfig) => void;
@@ -28,6 +19,8 @@ interface IProps extends SwatChartConfig {
 }
 
 export const Controls: Component<IProps> = (props) => {
+  const [chartWidth, setChartWidth] = createSignal<number>(getValueOfSubProperty(props, 'chart', 'width'));
+  const [chartHeight, setChartHeight] = createSignal<number>(getValueOfSubProperty(props, 'chart', 'height'));
   const [borderRadius, setBorderRadius] = createSignal<number>(getValueOfSubProperty(props, 'chart', 'borderRadius'));
   const [lineWidth, setLineWidth] = createSignal<number>(getValueOfSubProperty(props, 'chart', 'lineWidth'));
   const [paddingX, setPaddingX] = createSignal<number>(getValueOfSubSubProperty(props, 'chart', 'padding', 'x'));
@@ -76,7 +69,27 @@ export const Controls: Component<IProps> = (props) => {
 
         <div class="content">
           <label>
-            Border radius ({borderRadius()})
+            Width
+            <input
+              type="number"
+              min={0}
+              max={3840}
+              value={chartWidth()}
+              onChange={subNumber(props.onChange, 'chart', 'width', (newValue) => setChartWidth(newValue))}
+            />
+          </label>
+          <label>
+            Height
+            <input
+              type="number"
+              min={0}
+              max={2160}
+              value={chartHeight()}
+              onChange={subNumber(props.onChange, 'chart', 'height', (newValue) => setChartHeight(newValue))}
+            />
+          </label>
+          <label>
+            Border radius
             <input
               type="number"
               min={0}
