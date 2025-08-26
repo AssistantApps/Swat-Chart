@@ -172,8 +172,36 @@ export const testLicenceUrl = async (licenceUrl: string): Promise<string | undef
   if (goodStatusCodes.includes(netResult.status)) return localUrl;
 
   if (localUrl.includes('/main/')) {
-    localUrl = localUrl.replace('/main/', '/master/');
-    netResult = await fetch(localUrl);
-    if (goodStatusCodes.includes(netResult.status)) return localUrl;
+    const testMasterBranchUrl = localUrl.replace('/main/', '/master/');
+    const testMasterBranchNetResult = await fetch(testMasterBranchUrl);
+    if (goodStatusCodes.includes(testMasterBranchNetResult.status)) return testMasterBranchUrl;
+
+    if (localUrl.includes('.md')) {
+      const testMasterBranchTxtUrl = testMasterBranchUrl.replace('.md', '.txt');
+      const testMasterBranchTxtNetResult = await fetch(testMasterBranchTxtUrl);
+      if (goodStatusCodes.includes(testMasterBranchTxtNetResult.status)) return testMasterBranchTxtUrl;
+
+      const testMasterBranchTxtNoExtUrl = testMasterBranchUrl.replace('.md', '');
+      const testMasterBranchTxtNoExtNetResult = await fetch(testMasterBranchTxtNoExtUrl);
+      if (goodStatusCodes.includes(testMasterBranchTxtNoExtNetResult.status)) return testMasterBranchTxtNoExtUrl;
+    }
   }
+
+  if (localUrl.includes('/master/')) {
+    const testMainBranchUrl = localUrl.replace('/master/', '/main/');
+    const testMainBranchNetResult = await fetch(testMainBranchUrl);
+    if (goodStatusCodes.includes(testMainBranchNetResult.status)) return testMainBranchUrl;
+
+    if (localUrl.includes('.md')) {
+      const testMasterBranchTxtUrl = testMainBranchUrl.replace('.md', '.txt');
+      const testMasterBranchTxtNetResult = await fetch(testMasterBranchTxtUrl);
+      if (goodStatusCodes.includes(testMasterBranchTxtNetResult.status)) return testMasterBranchTxtUrl;
+
+      const testMasterBranchTxtNoExtUrl = testMainBranchUrl.replace('.md', '');
+      const testMasterBranchTxtNoExtNetResult = await fetch(testMasterBranchTxtNoExtUrl);
+      if (goodStatusCodes.includes(testMasterBranchTxtNoExtNetResult.status)) return testMasterBranchTxtNoExtUrl;
+    }
+  }
+
+  console.log('localUrl', localUrl);
 };

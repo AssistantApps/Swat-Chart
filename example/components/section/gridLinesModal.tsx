@@ -1,6 +1,6 @@
 import { Component, createSignal } from 'solid-js';
 
-import { SwatChartXGridLine, SwatChartYGridLine } from '../../../dist/index';
+import { SwatChartXGridLine, SwatChartYGridLine } from '../../../dist/swat.export';
 import { onTargetValue } from '../../helpers/eventHelper';
 import { Modal } from '../core/modal';
 

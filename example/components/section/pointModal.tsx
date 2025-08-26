@@ -1,6 +1,6 @@
 import { Component, createSignal } from 'solid-js';
 
-import { SwatChartPoint, SwatChartXTick, SwatChartYTick } from '../../../dist/index';
+import { SwatChartPoint, SwatChartXTick, SwatChartYTick } from '../../../dist/swat.export';
 import { Modal } from '../core/modal';
 import { onTargetValue } from '../../helpers/eventHelper';
 

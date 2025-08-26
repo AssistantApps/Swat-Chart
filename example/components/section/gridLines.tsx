@@ -1,6 +1,6 @@
 import { Component, createSignal, For } from 'solid-js';
 
-import { SwatChartConfig, SwatChartXGridLine, SwatChartYGridLine } from '../../../dist/index';
+import { SwatChartConfig, SwatChartXGridLine, SwatChartYGridLine } from '../../../dist/swat.export';
 import { getValueOfSubProperty, subNumber } from '../../helpers/controlsHelper';
 import { AddGridLineModal } from './gridLinesModal';
 

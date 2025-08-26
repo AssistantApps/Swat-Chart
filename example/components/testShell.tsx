@@ -1,5 +1,5 @@
 import { Component, createSignal } from 'solid-js';
-import { generateSwatChart, SwatChartConfig } from '../../dist/index';
+import { generateSwatChart, SwatChartConfig } from '../../dist/swat.export';
 
 import { defaultChartConfig } from '../constants/defaultChart';
 import { Controls } from './controls';

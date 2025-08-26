@@ -1,5 +1,5 @@
 import { Component, createSignal, For, Show } from 'solid-js';
-import { packagesUsed, SwatChartConfig } from '../../dist/index';
+import { packagesUsed, SwatChartConfig } from '../../dist/swat.export';
 
 import { Modal } from '../components/core/modal';
 import {
@@ -242,7 +242,7 @@ export const Controls: Component<IProps> = (props) => {
         onBackdropClick={() => setIsPackagesModalOpen(false)}
         size="lg"
       >
-        <p>Generated on: {packagesUsed().generatedDate}</p>
+        <p>Generated on: {packagesUsed().generatedDateFormat}</p>
         <table>
           <thead>
             <tr>
@@ -257,9 +257,11 @@ export const Controls: Component<IProps> = (props) => {
                 <tr>
                   <th scope="row">{item.name}</th>
                   <td>{item.version}</td>
-                  <td>
-                    <a href={item.licenceUrl ?? '#'}>{item.licenseType}</a>
-                  </td>
+                  <Show when={(item.licenceUrl?.length ?? 0) > 1} fallback={<td>{item.licenseType}</td>}>
+                    <td>
+                      <a href={item.licenceUrl ?? '#'}>{item.licenseType}</a>
+                    </td>
+                  </Show>
                 </tr>
               )}
             </For>

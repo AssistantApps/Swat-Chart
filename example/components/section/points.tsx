@@ -1,6 +1,6 @@
 import { Component, createSignal, For, Show } from 'solid-js';
 
-import { SwatChartConfig, SwatChartPoint } from '../../../dist/index';
+import { SwatChartConfig, SwatChartPoint } from '../../../dist/swat.export';
 import { getValueOfSubProperty, subNumber } from '../../helpers/controlsHelper';
 import { AddPointModal } from './pointModal';
 

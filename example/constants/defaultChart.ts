@@ -1,4 +1,4 @@
-import { SwatChartConfig } from '../../dist';
+import { SwatChartConfig } from '../../dist/swat.export';
 
 export const defaultChartConfig: SwatChartConfig = {
   chart: {

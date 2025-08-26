@@ -1,5 +1,5 @@
 import { Component } from 'solid-js';
-import { packageMeta } from '../../dist';
+import { packageMeta } from '../../dist/swat.export';
 
 export const Footer: Component = () => {
   return (
