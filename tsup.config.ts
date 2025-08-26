@@ -9,6 +9,7 @@ function updatePackageJson() {
   pkg.exports = {
     '.': {
       import: './dist/swat.export.js',
+      types: './dist/swat.export.d.ts',
     },
   };
 
