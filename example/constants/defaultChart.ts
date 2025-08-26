@@ -34,14 +34,12 @@ export const defaultChartConfig: SwatChartConfig = {
     x: [
       { percent: 0, label: 'Weaknesses', textAnchor: 'left', hideTick: true },
       { percent: 25, label: 'Testing' },
-      { percent: 50, label: '' },
       { percent: 75, label: '' },
       { percent: 100, label: 'Strengths', textAnchor: 'end', hideTick: true },
     ],
     y: [
       { percent: 100, label: 'Threats', hideTick: true },
       { percent: 75, label: '' },
-      { percent: 50, label: '' },
       { percent: 25, label: '25%' },
       { percent: 0, label: 'Opportunities', hideTick: true },
     ],
